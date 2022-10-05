@@ -45,7 +45,6 @@ int main()
         temp.push_back(num);
     }
 
-    cout << "next:\n";
     // ют╥б 2
     vector<vector<int>> temp2;
     for (int i = 0; i < 3; i++)
