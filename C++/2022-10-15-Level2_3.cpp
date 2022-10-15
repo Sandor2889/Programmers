@@ -31,6 +31,7 @@ int solution(int n)
 
     return ans;
 }
+
 int main()
 {
     int n = 5000;
