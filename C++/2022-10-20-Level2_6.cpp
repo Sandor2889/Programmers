@@ -11,13 +11,12 @@ vector<int> solution(int n, vector<string> words)
     int people[11] = { 0 };
     unordered_set<string> data;
 
-    // 1 2 3
-
     for (int i = 0; i < words.size(); i++)
     {
         int order = i % n + 1;
         people[order]++;
 
+        // 마지막과 첫 알파벳 변수
         int lastSize = 0;
         char lastAlpha = '0';
         char startAlpha = words[i][0];
@@ -49,9 +48,9 @@ vector<int> solution(int n, vector<string> words)
 }
 
 int main()
-{ 
+{
     int n = 3;
-    vector<string> words = 
+    vector<string> words =
     { "tank", "kick", "know", "wheel", "land", "dream", "mother", "robot", "tank" };
 
     vector<int> answer = solution(n, words);
