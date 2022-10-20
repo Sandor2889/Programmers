@@ -41,7 +41,6 @@ vector<int> solution(int n, vector<string> words)
     }
 
     // 아무도 틀리지 않았을때
-    answer.clear();
     answer.push_back(0);
     answer.push_back(0);
     return answer;
