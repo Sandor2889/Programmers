@@ -1,35 +1,38 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <algorithm>
 
 using namespace std;
 
+bool visited[8];
+vector<int> weight;
+
+// dfs + 백트랙킹
+void dfs(vector<vector<int>>& dungeons, int& k, int cnt)
+{
+    for (int i = 0; i < dungeons.size(); i++)
+    {
+        if (!visited[i] && k >= dungeons[i][0])
+        {
+            visited[i] = true;
+            k -= dungeons[i][1];
+            dfs(dungeons, k, cnt + 1);
+            k += dungeons[i][1];
+            visited[i] = false;
+        }
+    }
+
+    // 끝까지 탐색하며 나온 weight 저장
+    weight.push_back(cnt);
+}
 
 int solution(int k, vector<vector<int>> dungeons)
 {
-    int answer = 0;
-
-    for (int i = 0; i < dungeons.size(); i++)
-    {
-        int result = 0;
-        
-
-        if (result > answer) { answer = result; }
-    }
-
+    dfs(dungeons, k, 0);
+    int answer = *max_element(weight.begin(), weight.end());    // 최대값 출력
     return answer;
 }
-
-/*
-{ 80, 20 } 선택
-{ 50, 40 }, { 30, 10 } 가능한지 확인
-
-{ 50, 40 } 선택
-{ 30, 10 } 불가
-
-{ 30, 10 } 선택
-{ 50, 40 } 불가
-*/
-
 int main()
 {
     int k = 80;
