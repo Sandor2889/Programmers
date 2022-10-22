@@ -33,6 +33,7 @@ int solution(int k, vector<vector<int>> dungeons)
     int answer = *max_element(weight.begin(), weight.end());    // 최대값 출력
     return answer;
 }
+
 int main()
 {
     int k = 80;
