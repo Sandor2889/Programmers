@@ -28,6 +28,7 @@ bool solution(string s)
 
     return answer;
 }
+
 int main()
 {
     string s = { "(())()" };
