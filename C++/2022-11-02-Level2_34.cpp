@@ -52,7 +52,6 @@ vector<string> solution(vector<string> record)
             temp = log[trigger[i].second] + "´ÔÀÌ ³ª°¬½À´Ï´Ù.";
             answer.push_back(temp);
         }
-        else { continue; }
     }
 
     return answer;
