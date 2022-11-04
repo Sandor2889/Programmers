@@ -11,7 +11,7 @@ using namespace std;
 vector<int> solution(vector<int> fees, vector<string> records)
 {
     vector<int> answer;
-    map<string, pair<int, bool>> log; // 차번호, IN시간, IN상태
+    map<string, pair<int, bool>> log;   // 차번호, IN시간, IN상태
     map<string, int> res;               // 차번호, 최종시간
 
     for (int i = 0; i < records.size(); ++i)
