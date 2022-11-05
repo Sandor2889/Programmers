@@ -1,67 +1,52 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <string>
-#include <algorithm>
 
 using namespace std;
 
-// 모두 소문자로 변환
-string getLowerString(string city)
+int dp[2001];
+
+int cases(int n)
 {
-    string temp = "";
-    for (char& c : city) { temp += tolower(c); }
-    return temp;
+    if (n == 1) { return 1; }
+    else if (n == 2) { return 2; }
+
+    if (dp[n] != 0) { return dp[n]; }
+
+    return dp[n] = (cases(n - 1) + cases(n - 2)) % 1234567;
 }
 
-int solution(int cacheSize, vector<string> cities)
+long long solution(int n)
 {
-    // miss 일때 push (가득찬 경우도 고려),
-    // hit 일때 idx를 찾아 제거후 다시 push,
-    // 때문에 LRU를 vector로 구현 필요.
-    vector<string> caching;
-    int answer = 0;
-
-    if (cacheSize == 0) { return cities.size() * 5; }
-
-    for (int i = 0; i < cities.size(); ++i)
-    {
-        // 소문자로 이름 통일 시키기
-        string unity = getLowerString(cities[i]);
-
-        // caching에 city가 있는지 확인
-        auto it = find(caching.begin(), caching.end(), unity);
-
-        // hit 일 경우 - 제거후 다시 넣기
-        if (it != caching.end())
-        {
-            answer += 1;
-            caching.erase(it);
-            caching.push_back(unity);
-        }
-        // miss 일 경우
-        else
-        {
-            answer += 5;
-
-            // caching이 가득차있다면 맨 앞(가장 오래된 데이터) 제거
-            if (caching.size() == cacheSize) { caching.erase(caching.begin()); }
-            caching.push_back(unity);
-        }
-    }
+    long long answer = 0;
+    answer = cases(n);
 
     return answer;
 }
 
 int main()
 {
-    vector<string> cities = 
-    { 
-        "Jeju", "Pangyo", "Seoul", "NewYork", "LA",
-        "SanFrancisco", "Seoul", "Rome", "Paris", "Jeju", "NewYork", "Rome" 
-    };
-    int cacheSize = 5;
-    int answer = solution(cacheSize, cities);
+    int n = 4;
+    long long answer = solution(n);
 
     cout << answer;
 }
+
+/*
+
+1, 1, 1
+2, 2, 11 2
+3, 3, 111 12 21
+4, 5, 1111 112 121 211 22
+5, 8, 11111 1112 1121 1211 2111 122 212 221
+6, 13, 111111 11112 11121 11211 12111 21111 1122 1212 2112 1221 2121 2211 222
+7, 21, 1111111 111112 111121 111211 112111 121111 211111 11122 11212 12112 21112 11221 12121 21121 12211 21211 22111 1222
+2122 2212 2221
+
+f(1) = 1
+f(2) = 2
+
+n > 2
+f(n) = f(n-1) + f(n-2)
+
+*/

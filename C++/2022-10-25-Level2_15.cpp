@@ -4,29 +4,33 @@
 
 using namespace std;
 
-int dp[100001];
-
-int fibonacci(int n)
+bool sum(int limit, int a, int& total)
 {
-    if (n == 0) { return 0; }
-    else if (n == 1) { return 1; }
+    total += a;
 
-    // dp[n]에 기록된 데이터가 있으면 꺼내기
-    if (dp[n] != 0) { return dp[n]; }
+    if (total > limit) { return false; }
+    else if (total == limit) { return true; }
 
-    // 결과 값을 dp[]에 저장
-    return dp[n] = (fibonacci(n - 1) + fibonacci(n - 2)) % 1234567;
+    return sum(limit, a + 1, total);
 }
 
 int solution(int n)
 {
-    int answer = fibonacci(n);
+    int answer = 0;
+
+    // 1~n 범위에서 가능한 것 찾아 카운팅 
+    for (int i = 1; i <= n; i++)
+    {
+        int total = 0;
+        if (sum(n, i, total)) { answer++; }
+    }
+
     return answer;
 }
 
 int main()
 {
-    int n = 3;
+    int n = 15;
     int answer = solution(n);
     cout << answer;
 

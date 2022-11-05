@@ -1,28 +1,25 @@
 #include <iostream>
-#include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
-bool sum(int limit, int a, int& total)
+bool myCompare(int a, int b)
 {
-    total += a;
-
-    if (total > limit) { return false; }
-    else if (total == limit) { return true; }
-
-    return sum(limit, a + 1, total);
+    return a > b;
 }
 
-int solution(int n)
+int solution(vector<int> A, vector<int> B)
 {
     int answer = 0;
 
-    // 1~n 범위에서 가능한 것 찾아 카운팅 
-    for (int i = 1; i <= n; i++)
+    // 한 쪽은 오름차순, 한 쪽은 내림차순 
+    sort(A.begin(), A.end());
+    sort(B.begin(), B.end(), myCompare);
+
+    for (int i = 0; i < A.size(); i++)
     {
-        int total = 0;
-        if (sum(n, i, total)) { answer++; }
+        answer += A[i] * B[i];
     }
 
     return answer;
@@ -30,8 +27,10 @@ int solution(int n)
 
 int main()
 {
-    int n = 15;
-    int answer = solution(n);
+    vector<int> A = { 1, 4, 2 };
+    vector<int> B = { 5, 4, 4 };
+
+    int answer = solution(A, B);
     cout << answer;
 
     return 0;

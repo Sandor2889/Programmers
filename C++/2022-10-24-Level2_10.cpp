@@ -1,55 +1,52 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using namespace std;
 
 string solution(string s)
 {
     string answer = "";
-    bool flag = true; // 공백 이후 첫 알파벳
+    vector<int> data;
 
-    for (auto it = s.begin(); it != s.end(); it++)
+    string temp = "";
+    for (auto it = s.begin(); ; it++)
     {
-        if (*it == ' ') // 공백 일때
+        // it이 end에 도달하면 temp를 data에 넣고 끝내기
+        if (it == s.end())
         {
-            answer += *it;
-            flag = true;
+            data.push_back(stoi(temp));
+            temp = "";
+            break;
         }
-        else if (!isalpha(*it)) // 알파벳이 아닐때 (공백이 제외된 숫자인 경우)
+
+        // 공백이면 data에 넣고 temp 초기화
+        if (*it == ' ')
         {
-            answer += *it;
-            flag = false;
+            data.push_back(stoi(temp));
+            temp = "";
         }
-        else // 알파벳 일때
+        else    // 공백이 아니면 temp에 넣기
         {
-            if (flag && islower(*it))  // 첫 알파벳이고 소문자이면 대문자로 변환하여 넣기
-            {
-                answer += toupper(*it);
-                flag = false;
-            }
-            else if (flag && isupper(*it)) // 첫 알파벳이고 대문자
-            {
-                answer += *it;
-                flag = false;
-            }
-            else if (!flag && isupper(*it))   // 첫 알파벳이 아니고 대문자
-            {
-                answer += tolower(*it);
-            }
-            else // 첫 알파벳이 아니고 소문자
-            {
-                answer += *it;
-            }
+            temp += *it;
         }
     }
+
+    // 최대, 최소 찾기
+    string min = to_string(*min_element(data.begin(), data.end()));
+    string max = to_string(*max_element(data.begin(), data.end()));
+
+    answer += min;
+    answer += ' ';
+    answer += max;
 
     return answer;
 }
 
 int main()
 {
-    string s = { "3people unFollowed me" };
+    string s = { "-1 -2 -3 -4" };
 
     string answer = solution(s);
     cout << answer;

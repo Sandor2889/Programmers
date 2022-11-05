@@ -1,39 +1,57 @@
 #include <iostream>
-#include<string>
+#include <string>
+#include <vector>
 
 using namespace std;
 
-bool solution(string s)
+string solution(string s)
 {
-    bool answer = true;
-    int open = 0;
+    string answer = "";
+    bool flag = true; // 공백 이후 첫 알파벳
 
-    // '(' 면 open을 증가하고 ')' 면 open을 감소시킨다.
-    // open이 0이 되어야 올바르게 짝지어진 것이다.
-    for (int i = 0; i < s.size(); i++)
+    for (auto it = s.begin(); it != s.end(); it++)
     {
-        if (s[i] == ')')    // ')' 이고 '(' 없을 경우 false 반환하고 종료
+        if (*it == ' ') // 공백 일때
         {
-            if (open == 0) { return false; }
-            else { open -= 1; }
+            answer += *it;
+            flag = true;
         }
-        else  // '(' 이면 수량 증가 
+        else if (!isalpha(*it)) // 알파벳이 아닐때 (공백이 제외된 숫자인 경우)
         {
-            open++;
+            answer += *it;
+            flag = false;
+        }
+        else // 알파벳 일때
+        {
+            if (flag && islower(*it))  // 첫 알파벳이고 소문자이면 대문자로 변환하여 넣기
+            {
+                answer += toupper(*it);
+                flag = false;
+            }
+            else if (flag && isupper(*it)) // 첫 알파벳이고 대문자
+            {
+                answer += *it;
+                flag = false;
+            }
+            else if (!flag && isupper(*it))   // 첫 알파벳이 아니고 대문자
+            {
+                answer += tolower(*it);
+            }
+            else // 첫 알파벳이 아니고 소문자
+            {
+                answer += *it;
+            }
         }
     }
-
-    // open 괄호에 대한 짝(close)이 맞춰지지 않으면 false
-    if (open != 0) { answer = false; }
 
     return answer;
 }
 
 int main()
 {
-    string s = { "(())()" };
+    string s = { "3people unFollowed me" };
 
-    bool answer = solution(s);
+    string answer = solution(s);
     cout << answer;
 
     return 0;

@@ -1,55 +1,65 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <stack>
 
 using namespace std;
 
-int solution(string s)
+void Init(vector<vector<int>>& answer, int rowSize, int columnSize)
 {
-    int answer = 0;
-
-    // 회전 수
-    for (int i = 0; i < s.size(); ++i)
+    for (int row = 0; row < rowSize; ++row)
     {
-        stack<char> parentheses;
+        vector<int> temp(columnSize);
+        answer.push_back(temp);
+    }
+}
 
-        // s에대한 문자 루프
-        for (int j = 0; j < s.size(); ++j)
-        {
-            // 열린 괄호는 stack에 push
-            if (s[j] == '(' || s[j] == '{' || s[j] == '[') { parentheses.push(s[j]); }
-            else  // 닫힌 괄호가 들어온다면
+vector<vector<int>> solution(vector<vector<int>> arr1, vector<vector<int>> arr2)
+{
+    vector<vector<int>> answer;
+
+    int rowSize = arr1.size();        // 만들어질 행렬의 행 = 앞 행렬의 행
+    int columnSize = arr2[0].size();  // 만들어질 행렬의 열 = 뒤 행렬의 열
+    
+    Init(answer, rowSize, columnSize);  // 만들어질 행렬 사이즈 만큼 공간 확보
+
+    for (int row = 0; row < rowSize; ++row)
+    {
+        for (int column = 0; column < columnSize; ++column)
+        {       
+            // 두 행렬의 곱 (x * k) * (k * y) 공통된 k 만큼 반복
+            for (int k = 0; k < arr2.size(); ++k)
             {
-                // 빈 공간에 닫히 괄호가 들어오면 종료
-                if (parentheses.empty()) { parentheses.push(s[j]); break; }
-                else
-                {
-                    // 맞는 짝이 오면 pop
-                    if (parentheses.top() == '(' && s[j] == ')') { parentheses.pop(); }
-                    else if (parentheses.top() == '{' && s[j] == '}') { parentheses.pop(); }
-                    else if (parentheses.top() == '[' && s[j] == ']') { parentheses.pop(); }
-                    // 짝이 맞지 않으면 종료
-                    else { break; }
-                }
+                answer[row][column] += arr1[row][k] * arr2[k][column];
             }
         }
-
-        if (parentheses.empty()) { ++answer; }
-
-        // 회전 - 가장 앞의 문자를 맨 뒤로 보내기
-        char frist = s.front();
-        s.erase(s.begin());
-        s += frist;
     }
+
     return answer;
 }
 
-int main() 
+int main()
 {
-    string s = { "[](){}" };
-    int answer = solution(s);
-    cout << answer;
+    vector<vector<int>> arr1
+    {
+        { 2, 3, 2 },
+        { 4, 2, 4 }, 
+        { 3, 1, 4} 
+    };
+    vector<vector<int>> arr2
+    {
+        { 5, 4, 3 },
+        { 2, 4, 1 },
+        { 3, 1, 1}
+    };
+    
+    vector<vector<int>> answer = solution(arr1, arr2);
 
-    return 0;
+    for (int i = 0; i < answer.size(); ++i)
+    {
+        for (int j = 0; j < answer[0].size(); ++j)
+        {
+            cout << answer[i][j] << ' ';
+        }
+        cout << '\n';
+    }
 }

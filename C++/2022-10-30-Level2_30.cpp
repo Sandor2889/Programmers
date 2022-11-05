@@ -2,45 +2,41 @@
 #include <string>
 #include <vector>
 #include <queue>
-#include <algorithm>
 
 using namespace std;
 
-int solution(vector<int> priorities, int location)
+vector<int> solution(vector<int> progresses, vector<int> speeds)
 {
-    int answer = 1;
-    int size = priorities.size();
-    vector<int> result;
-    queue<pair<int, int>> q;
+    vector<int> answer;
+    queue<int> q;
 
-    // q에 순서대로 (중요도, idx) 넣기
-    for (int i = 0; i < size; ++i) { q.push({ priorities[i], i }); }
-
-    // 최댓값
-    int max = *max_element(priorities.begin(), priorities.end());
+    // q에 progresses.size 만큼 인덱스 순서대로 넣기
+    for (int i = 0; i < progresses.size(); i++) { q.push(i); }
 
     while (!q.empty())
     {
-        pair<int, int> temp = q.front();
-        int importance = temp.first;
+        int idx = q.front();
+        int cnt = 0; // 완료 수
 
-        // 최댓값 보다 작으면 q에서 맨뒤로 보내기
-        if (importance < max) { q.pop(); q.push(temp); }
+        // 진도가 100이 될때까지 걸리는 시간
+        int spentTime = (100 - progresses[idx]) / speeds[idx];
+        if ((100 - progresses[idx]) % speeds[idx] != 0) { ++spentTime; }
 
-        // 최댓값과 같거나 같으면 stack에 넣고 q에서 빼내기, 최댓값 갱신
-        else
+        for (int i = idx; i < progresses.size(); ++i)
         {
-            result.push_back(temp.second);
-            priorities.erase(max_element(priorities.begin(), priorities.end()));
-            if (!priorities.empty()) max = *max_element(priorities.begin(), priorities.end());
-            q.pop();
-        }
-    }
+            // 진도가 100이 아니면 걸린 시간 만큼 더하기 
+            if (progresses[i] < 100) { progresses[i] += spentTime * speeds[i]; }
 
-    // location의 순서 출력
-    for (int i = 0; i < result.size(); ++i)
-    {
-        if (result[i] == location) { answer = i + 1; }
+            // 가장 앞에있는 작엎의 진도가 100이라면 q에서 빼내기
+            if (progresses[i] >= 100 && idx == i)
+            {
+                q.pop();
+                ++idx;
+                ++cnt;
+            }
+        }
+
+        answer.push_back(cnt);
     }
 
     return answer;
@@ -48,10 +44,16 @@ int solution(vector<int> priorities, int location)
 
 int main()
 {
-    vector<int> priorities = { 2, 1, 3, 2 };
-    int answer = solution(priorities, 2);
+    vector<int> progresses = { 95, 90, 99, 99, 80, 99 };
+    vector<int> speeds = { 1, 1, 1, 1, 1, 1 };
+
+    vector<int> answer = solution(progresses, speeds);
+
+    for (int i : answer)
+    {
+        cout << i << ' ';
+    }
     
-    cout << answer;
 
     return 0;
 }

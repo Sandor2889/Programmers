@@ -1,41 +1,33 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
+#include <string>
+#include <stack>
 
 using namespace std;
 
-int solution(vector<int> people, int limit)
+int solution(string s)
 {
-    // 가능한 최대 무게와 최소 무게를 묶어서 태운다.
     int answer = 0;
 
-    // 오름차순 정렬
-    sort(people.begin(), people.end());
-
-    // 큰 무게 부터 시작
-    int minIdx = 0;
-    for (int i = people.size() - 1; i != minIdx - 1; i--)
+    // 문자 하나씩 조건에 따라 data에 push 또는 pop
+    stack<char> data;
+    for (int i = 0; i < s.size(); i++)
     {
-        ++answer; // 보트 수 증가
-
-        if (i == minIdx) { break; }  // 같은 곳을 가리키게 되면 종료
-
-        int max = people[i];
-        int min = people[minIdx];
-
-        // 최소 무게가 (limit - max) 보다 작거나 같은 값 인지 확인
-        if (limit - max >= min) { minIdx++; }
+        // 1. 가장 최근에 data에 저장된 문자와 현재 s[i]의 문자를 비교
+        // 2. 서로 다르면 push, 같으면 pop
+        if (data.empty() || data.top() != s[i]) { data.push(s[i]); }   
+        else { data.pop(); }
     }
+
+    if (data.empty()) { answer = 1; }
 
     return answer;
 }
 
 int main()
 {
-    vector<int> people = { 70, 70, 60, 40, 40 };
-    int limit = 110;
+    string s = { "baabaa" };
 
-    int answer = solution(people, limit);
+    int answer = solution(s);
     cout << answer;
 
     return 0;

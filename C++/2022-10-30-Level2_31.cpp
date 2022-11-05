@@ -1,78 +1,46 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <queue>
+#include <algorithm>
 
 using namespace std;
 
-int solution(int m, int n, vector<string> board)
+int solution(vector<int> priorities, int location)
 {
-    int answer = 0;
+    int answer = 1;
+    int size = priorities.size();
+    vector<int> result;
+    queue<pair<int, int>> q;
 
-    while (true)
+    // q에 순서대로 (중요도, idx) 넣기
+    for (int i = 0; i < size; ++i) { q.push({ priorities[i], i }); }
+
+    // 최댓값
+    int max = *max_element(priorities.begin(), priorities.end());
+
+    while (!q.empty())
     {
-        vector<pair<int, int>> clearIdx; // 제거할 블록의 idx
+        pair<int, int> temp = q.front();
+        int importance = temp.first;
 
-        // 2x2 블록 찾기
-        for (int row = 0; row < m - 1; ++row)
+        // 최댓값 보다 작으면 q에서 맨뒤로 보내기
+        if (importance < max) { q.pop(); q.push(temp); }
+
+        // 최댓값과 같거나 같으면 stack에 넣고 q에서 빼내기, 최댓값 갱신
+        else
         {
-            for (int column = 0; column < n - 1; ++column)
-            {
-                if (board[row][column] != '0' &&
-                    board[row][column] == board[row][column + 1] &&
-                    board[row][column] == board[row + 1][column] &&
-                    board[row][column] == board[row + 1][column + 1])
-                { clearIdx.push_back({ row, column }); }
-            }
+            result.push_back(temp.second);
+            priorities.erase(max_element(priorities.begin(), priorities.end()));
+            if (!priorities.empty()) max = *max_element(priorities.begin(), priorities.end());
+            q.pop();
         }
+    }
 
-        if (clearIdx.empty()) { break; }    // 제거할 블록이 없으니 빠져나오기
-
-        // 블록 제거
-        for (int i = 0; i < clearIdx.size(); ++i)
-        {
-            pair<int, int> temp = clearIdx[i];
-
-            if (board[temp.first][temp.second] != '0') 
-            { 
-                board[temp.first][temp.second] = '0';
-                ++answer; 
-            }
-            if (board[temp.first][temp.second + 1] != '0')
-            {
-                board[temp.first][temp.second + 1] = '0';
-                ++answer;
-            }
-            if (board[temp.first + 1][temp.second] != '0')
-            {
-                board[temp.first + 1][temp.second] = '0';
-                ++answer;
-            }
-            if (board[temp.first + 1][temp.second + 1] != '0')
-            {
-                board[temp.first + 1][temp.second + 1] = '0';
-                ++answer;
-            }
-        }
-
-        // 빈 공간 채우기
-        for (int row = m - 1; row > 0; --row)
-        {
-            for (int column = n - 1; column >= 0; --column)
-            {
-                if (board[row][column] == '0')
-                {
-                    for (int height = row-1; height >= 0; --height)
-                    {
-                        if (board[height][column] != '0')
-                        {
-                            board[row][column] = board[height][column];
-                            board[height][column] = '0';
-                            break;
-                        }
-                    }
-                }
-            }
-        }
+    // location의 순서 출력
+    for (int i = 0; i < result.size(); ++i)
+    {
+        if (result[i] == location) { answer = i + 1; }
     }
 
     return answer;
@@ -80,8 +48,8 @@ int solution(int m, int n, vector<string> board)
 
 int main()
 {
-    vector<string> board = { "CCBDE", "AAADE", "AAABF", "CCBBF" };
-    int answer = solution(4, 5, board);
+    vector<int> priorities = { 2, 1, 3, 2 };
+    int answer = solution(priorities, 2);
     
     cout << answer;
 
