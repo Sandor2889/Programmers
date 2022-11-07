@@ -32,12 +32,6 @@ int solution(int n)
     return answer;
 }
 
-int solution(int n)
-{
-    int answer = tiling(n);
-    return answer;
-}
-
 int main()
 {
     int n = 1;
