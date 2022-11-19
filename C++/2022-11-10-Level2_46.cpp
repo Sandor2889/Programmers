@@ -6,7 +6,7 @@ using namespace std;
 
 int answer, cnt;
 
-// 완전탐색
+// 완전탐색 (모든 문자에 대해 순서를 매김)
 void dfs(string curr, string target, char alpha[])
 {
     if (curr == target) { answer = cnt; }   // 타겟과 같아지면 answer에 대입
